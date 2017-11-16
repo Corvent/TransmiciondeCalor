@@ -1,0 +1,3 @@
+Estufa_Electrica,18
+Estufa_Gas,12
+Estufa_Lena,20

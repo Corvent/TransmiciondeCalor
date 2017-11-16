@@ -1,0 +1,4 @@
+Canamo,0.06
+Algodon,0.04
+Fibra_Madera,0.05
+Lino,0.045
