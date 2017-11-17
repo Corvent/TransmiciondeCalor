@@ -1,1 +1,123 @@
+# -*- Simulador de estufas 1 -*-
+# Este programa simula la variación de temperatura provocada por una estufa en una habitación con un aislante específico en un tiempo determinado
+# Identificación (Carlos Córdova, Matías Órdenes, Cristobal Soto, Esteban Orellana, Bryan Huilipan, 1.0, 13/10/2017)
 
+## BLOQUE DE DEFINICIÓN
+
+import matplotlib.pyplot as plotter
+from numpy import array
+
+# DEFINICIÓN DE FUNCIONES
+def abrirarchivo(archivo):#Abrir archivos
+    archivo = archivo + ".txt"
+    archivo = open(archivo)
+    texto=''
+    for a in archivo:
+        texto = texto + a
+    archivo.close()
+    return texto
+
+def lecturaaisyest(archivo):#Lectura archivos de aislantes y estufas
+    archivo= archivo.split("\n")
+    lista=[]
+    for caracter in archivo:
+        p=caracter.split(",")
+        numero= int(p[1])
+        lista.append(numero)
+    return lista
+
+def lecturamatriz(archivo):#Lectura archivo Matriz de habitación
+    archivo2=""
+    for numero in archivo:
+        archivo2 = archivo2 + numero + " "
+    archivo2 = archivo2.split("\n")
+    lista=[]
+    for caracter in archivo2:
+        matrizarchivo = caracter.split(",")
+        matrizarchivo = caracter.split(" ")
+        lista.append(matrizarchivo)
+    return lista
+
+def temperatura(estufa,ciclos,ti,aislante):#Calculo de variación de temperatura
+    i = 0
+    tempfinal= ti
+    lista=[]
+    while i < ciclos:
+        disminucion = (tempfinal + estufa) * aislante
+        tempfinal = tempfinal + estufa - disminucion
+        lista.append(tempfinal)
+        i = i + 1
+    return lista
+
+def eficiencia(T1,T2):#Cálculo de Eficiencia
+    eficiencia = abs((T2-T1)/T2)*100
+    return eficiencia
+
+def listatemp(matriz,lista):
+    Matrices=[]
+    for elemento in lista:
+        MatrizNumpy = array(matriz)
+        resultado = MatrizNumpy.dot()
+    return Matrices
+
+def promediodist(distancia,temperatura,matriz):
+    #Esta función calculará el promedio a la distancia que el usuario defina, usando una matriz para simular el espacio
+    #y la temperatura ya obtenida para cakcular la variación.
+    return promedio
+
+def listapromediorest(distancia,temperatura,matriz, restriccion):
+    #Al igual que la función anterior y la primera, esta parte del programa calculará promedios, pero los guardará
+    #constantemente en una lista en cada ciclo, con la restricción de temperatura que seleccionó el usuario
+    return lista
+
+def grafico(lista):#Función graficadora de resultados
+    grafico =plotter.plot(vector,lista[0],label=Estufa Eléctrica)
+    plotter.setp(grafico1,'linestyle','-','color','r','linewidth',2.0)
+    grafico2 =plotter.plot(vector,lista[1],label=Estufa Gas)
+    plotter.setp(grafico2,'linestyle','-','color','b','linewidth',2.0)
+    grafico3 =plotter.plot(vector,lista[2],label=Estufa Leña)
+    plotter.setp(grafico3,'linestyle','-','color','g','linewidth',2.0)
+    return plotter
+
+## BLOQUE PRINCIPAL
+        
+# BLOQUE ENTRADAS
+Calefaccioncentral = 20
+Dist = input("Ingrese distancia a la cual promediar la temperatura:")
+Tiempo = input("¿Cuanto tiempo funcionará la estufa?")
+T1 = input("¿A que temperatura inicia la habitación?")
+Tb = input("Ingrese la temperatura a la que funcionará la calefacción central:")
+MatrizHabitacion = lecturamatriz(abrirarchivo("Habitación"))
+Estufas = lecturaaisyest(abrirarchivo("Estufas"))
+Aislantes = lecturaaisyest(abrirarchivo("Aislantes"))
+
+
+# BLOQUE PROCESAMIENTO
+Resultados = []
+TemperaturasF = []
+for estufa in Estufas:
+    for aislante in Aislantes:
+        listatemperaturas = temperatura(estufa,n,T1,aislante)
+        Tempfinal = listatemperaturas[n-1]
+        result = eficiencia(T1,Tempfinal)
+        TemperaturasF.append(Tempfinal)
+        Resultados.append(result)
+    
+# BLOQUE SALIDAS
+print "Para la Estufa Eléctrica los resultados son:"
+print "La eficacia en Cañamo es", Resultados[0], "% con una temperatura final de", TemperaturasF[0], "grados"
+print "La eficacia en Algodón es", Resultados[1], "% con una temperatura final de", TemperaturasF[1], "grados"
+print "La eficacia en Fibra de Madera es", Resultados[2], "% con una temperatura final de", TemperaturasF[2], "grados"
+print "La eficacia en Lino es", Resultados[3], "% con una temperatura final de", TemperaturasF[3], "grados"
+print "Para la Estufa a Gas los resultados son:"
+print "La eficacia en Cañamo es", Resultados[4], "% con una temperatura final de", TemperaturasF[4], "grados"
+print "La eficacia en Algodón es", Resultados[5], "% con una temperatura final de", TemperaturasF[5], "grados"
+print "La eficacia en Fibra de Madera es", Resultados[6], "% con una temperatura final de", TemperaturasF[6], "grados"
+print "La eficacia en Lino es", Resultados[7], "% con una temperatura final de", TemperaturasF[7], "grados"
+print "Para la Estufa a Leña los resultados son:"
+print "La eficacia en Cañamo es", Resultados[8], "% con una temperatura final de", TemperaturasF[8], "grados"
+print "La eficacia en Algodón es", Resultados[9], "% con una temperatura final de", TemperaturasF[9], "grados"
+print "La eficacia en Fibra de Madera es", Resultados[10], "% con una temperatura final de", TemperaturasF[10], "grados"
+print "La eficacia en Lino es", Resultados[11], "% con una temperatura final de", TemperaturasF[11], "grados"
+#print "El promedio a la distancia seleccionada es", promedio(A,B)
+#show.graficos #El programa mostrará los graficos resultantes de la variación de temperatura con el regulador.
