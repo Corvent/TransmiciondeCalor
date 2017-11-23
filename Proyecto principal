@@ -4,8 +4,8 @@
 
 ## BLOQUE DE DEFINICIÓN
 
-import matplotlib.pyplot as plotter
-from numpy import array
+import numpy as np
+import matplotlib.pyplot as plt
 
 # DEFINICIÓN DE FUNCIONES
 def abrirarchivo(archivo):#Abrir archivos
@@ -22,8 +22,7 @@ def lecturaaisyest(archivo):#Lectura archivos de aislantes y estufas
     lista=[]
     for caracter in archivo:
         p=caracter.split(",")
-        numero= int(p[1])
-        lista.append(numero)
+        lista.append(p)
     return lista
 
 def lecturamatriz(archivo):#Lectura archivo Matriz de habitación
@@ -38,16 +37,29 @@ def lecturamatriz(archivo):#Lectura archivo Matriz de habitación
         lista.append(matrizarchivo)
     return lista
 
-def temperatura(estufa,ciclos,ti,aislante):#Calculo de variación de temperatura
+def temperatura(estufa,ciclos,ti,aislante,aire,exterior,porcentaje):#Calculo de variación de temperatura
     i = 0
-    tempfinal= ti
     lista=[]
     while i < ciclos:
-        disminucion = (tempfinal + estufa) * aislante
-        tempfinal = tempfinal + estufa - disminucion
-        lista.append(tempfinal)
+        aumento= int(estufa)*(aire)*porcentaje
+        ti= ti+aumento
+        disminucion = (ti-exterior)*float(aislante)
+        ti= ti-disminucion
+        lista.append(ti)
         i = i + 1
     return lista
+
+def Temperaturasimple(Estufas,Tiempo,T1,Aislantes,Conductividadaire,TemperaturaExterior):
+    Resultados = []
+    TemperaturasF = []
+    for estufa in Estufas:
+        for aislante in Aislantes:
+            listatemperaturas = temperatura(estufa[1],Tiempo,T1,aislante[1],Conductividadaire,TemperaturaExterior,1)
+            Tempfinal = listatemperaturas[Tiempo-1]
+            result = eficiencia(T1,Tempfinal)
+            TemperaturasF.append(Tempfinal)
+            Resultados.append(result)              
+    return Resultados,TemperaturasF
 
 def eficiencia(T1,T2):#Cálculo de Eficiencia
     eficiencia = abs((T2-T1)/T2)*100
@@ -70,20 +82,26 @@ def listapromediorest(distancia,temperatura,matriz, restriccion):
     #constantemente en una lista en cada ciclo, con la restricción de temperatura que seleccionó el usuario
     return lista
 
-def grafico(lista):#Función graficadora de resultados
-    grafico =plotter.plot(vector,lista[0],label=Estufa Eléctrica)
-    plotter.setp(grafico1,'linestyle','-','color','r','linewidth',2.0)
-    grafico2 =plotter.plot(vector,lista[1],label=Estufa Gas)
-    plotter.setp(grafico2,'linestyle','-','color','b','linewidth',2.0)
-    grafico3 =plotter.plot(vector,lista[2],label=Estufa Leña)
-    plotter.setp(grafico3,'linestyle','-','color','g','linewidth',2.0)
-    return plotter
+def graficador(n,Aislantes,ResultadosF):#Función graficadora de resultados
+    plt.figure(1)
+    x= np.arange(0,n)
+    i=221
+    c=0
+    for resultado in ResultadosF:
+        plt.subplot(i)
+        grafico =plt.plot(x,ResultadosF[c])
+        plt.ylabel("Temperatura C")
+        plt.title(Aislantes[c][0])
+        i=i+1
+        c=c+1
+    return plt
 
 ## BLOQUE PRINCIPAL
         
 # BLOQUE ENTRADAS
-Calefaccioncentral = 20
-Dist = input("Ingrese distancia a la cual promediar la temperatura:")
+Calefaccioncentral = 20 #Temperatura generada por calefacción central inicialmente
+TemperaturaExterior= 14 #Temperatura fuera de la habitación(constante)
+Conductividadaire= 0.024 #Al igual que los aislantes, el aire también conduce la temperatura en menor grado
 Tiempo = input("¿Cuanto tiempo funcionará la estufa?")
 T1 = input("¿A que temperatura inicia la habitación?")
 Tb = input("Ingrese la temperatura a la que funcionará la calefacción central:")
@@ -93,15 +111,9 @@ Aislantes = lecturaaisyest(abrirarchivo("Aislantes"))
 
 
 # BLOQUE PROCESAMIENTO
-Resultados = []
-TemperaturasF = []
-for estufa in Estufas:
-    for aislante in Aislantes:
-        listatemperaturas = temperatura(estufa,n,T1,aislante)
-        Tempfinal = listatemperaturas[n-1]
-        result = eficiencia(T1,Tempfinal)
-        TemperaturasF.append(Tempfinal)
-        Resultados.append(result)
+
+Resultados,TemperaturasF = Temperaturasimple(Estufas,Tiempo,T1,Aislantes,Conductividadaire,TemperaturaExterior)
+plt = graficador(n,Aislantes,ResultadosF)#Llamado a función graficadora
     
 # BLOQUE SALIDAS
 print "Para la Estufa Eléctrica los resultados son:"
@@ -120,4 +132,4 @@ print "La eficacia en Algodón es", Resultados[9], "% con una temperatura final 
 print "La eficacia en Fibra de Madera es", Resultados[10], "% con una temperatura final de", TemperaturasF[10], "grados"
 print "La eficacia en Lino es", Resultados[11], "% con una temperatura final de", TemperaturasF[11], "grados"
 #print "El promedio a la distancia seleccionada es", promedio(A,B)
-#show.graficos #El programa mostrará los graficos resultantes de la variación de temperatura con el regulador.
+#plt.show()#Muestra de gráficos
